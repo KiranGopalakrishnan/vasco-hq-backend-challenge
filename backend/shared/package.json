@@ -1,7 +1,8 @@
 {
-  "name": "level3",
+  "name": "shared",
   "version": "1.0.0",
   "private": true,
+  "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon -e ts -w . -x ts-node ./src/index",
     "build": "tsc",
@@ -9,9 +10,7 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node",
-    "setupFiles": [
-      "./jest-setup-file.ts"
-    ]
-  }
+    "testEnvironment": "node"
+  },
+  "dependencies": {}
 }

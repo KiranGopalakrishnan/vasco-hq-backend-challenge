@@ -760,10 +760,10 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^29.0.0":
-  version "29.0.0"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.0.0.tgz#bc66835bf6b09d6a47e22c21d7f5b82692e60e72"
-  integrity sha512-X6Zjz3WO4cT39Gkl0lZ2baFRaEMqJl5NC1OjElkwtNzAlbkr2K/WJXkBkH5VP0zx4Hgsd2TZYdOEfvp2Dxia+Q==
+"@types/jest@^29.2.2":
+  version "29.2.2"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.2.2.tgz#874e7dc6702fa6a3fe6107792aa98636dcc480b4"
+  integrity sha512-og1wAmdxKoS71K2ZwSVqWPX6OVn3ihZ6ZT2qvZvZQm90lJVDyXIjYcu4Khx2CNIeaFv12rOU/YObOsI3VOkzog==
   dependencies:
     expect "^29.0.0"
     pretty-format "^29.0.0"
@@ -1152,6 +1152,14 @@ cjs-module-lexer@^1.0.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz#9f84ba3244a512f3a54e5277e8eef4c489864e40"
   integrity sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==
+
+class-validator@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.13.2.tgz#64b031e9f3f81a1e1dcd04a5d604734608b24143"
+  integrity sha512-yBUcQy07FPlGzUjoLuUfIOXzgynnQPPruyK1Ge2B74k9ROwnle1E+NxLWnUv5OLU8hA/qL5leAE9XnXq3byaBw==
+  dependencies:
+    libphonenumber-js "^1.9.43"
+    validator "^13.7.0"
 
 cliui@^7.0.2:
   version "7.0.4"
@@ -2436,6 +2444,11 @@ leven@^3.1.0:
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
   integrity sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==
 
+libphonenumber-js@^1.9.43:
+  version "1.10.14"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.14.tgz#e29da7f539751f724ac54017a098e3c7ca23de94"
+  integrity sha512-McGS7GV/WjJ2KjfOGhJU1oJn29RYeo7Q+RpANRbUNMQ9gj5XArpbjurSuyYPTejFwbaUojstQ4XyWCrAzGOUXw==
+
 lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
@@ -2926,6 +2939,11 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+reflect-metadata@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
+
 regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
@@ -3404,6 +3422,11 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
+typedi@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/typedi/-/typedi-0.10.0.tgz#e8f9a5ee100b84addbdfb57fe90d8d9ed2a21dea"
+  integrity sha512-v3UJF8xm68BBj6AF4oQML3ikrfK2c9EmZUyLOfShpJuItAqVBHWP/KtpGinkSsIiP6EZyyb6Z3NXyW9dgS9X1w==
+
 typescript@4.8.2:
   version "4.8.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.2.tgz#e3b33d5ccfb5914e4eeab6699cf208adee3fd790"
@@ -3463,6 +3486,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@^13.7.0:
+  version "13.7.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.7.0.tgz#4f9658ba13ba8f3d82ee881d3516489ea85c0857"
+  integrity sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==
 
 vary@~1.1.2:
   version "1.1.2"
