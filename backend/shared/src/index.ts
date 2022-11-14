@@ -1,8 +1,10 @@
-export * from './targets/per-quarter/QuarterlyTargetDTO'
-export * from './targets/per-month/PerMonthDTOTransformer'
+import 'reflect-metadata'
+
+export * from './targets/view/per-quarter/PerQuarterDTO'
+export * from './targets/view/per-month/PerMonthDTOTransformer'
 export * from './targets/TargetController'
 export * from './targets/domain/TargetService'
 export * from './targets/domain/TargetRepository'
 export * from './targets/domain/entities/MonthlyTargetEntity'
-export * from './targets/domain/entities/QuarterlyTargetEntity'
+export * from './targets/domain/entities/QuarterlyTargetAggregate'
 export * from './utils/HttpError'

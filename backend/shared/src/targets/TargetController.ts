@@ -1,44 +1,48 @@
-import {Service} from "typedi";
-import {ApplicationError} from "../utils/HttpError";
+import {autoInjectable} from "tsyringe";
+import {ApplicationError, HttpError} from "../utils/HttpError";
 import {TargetService} from "./domain/TargetService";
-import {MonthlyTargetDTO} from "./per-month/MonthlyTargetDTO";
-import {PerMonthDTOTransformer} from "./per-month/PerMonthDTOTransformer";
-import {SalesTeamMonthlyTargetDTO} from "./per-month/team/SalesTeamMonthlyTargetDTO";
-import {SalesTeamPerMonthDTOTransformer} from "./per-month/team/SalesTeamPerMonthDTOTransformer";
-import {PerQuarterDTOTransformer} from "./per-quarter/PerQuarterDTOTransformer";
-import {QuarterlyTargetDTO} from "./per-quarter/QuarterlyTargetDTO";
-import {SalesTeamPerQuarterDTOTransformer} from "./per-quarter/team/PerQuarterDTOTransformer";
-import {SalesTeamQuarterlyTargetDTO} from "./per-quarter/team/SalesTeamQuarterlyTargetDTO";
+import {PerMonthDTO} from "./view/per-month/PerMonthDTO";
+import {PerMonthDTOTransformer} from "./view/per-month/PerMonthDTOTransformer";
+import {TeamTargetPerMonthDTO} from "./view/per-month/team/TeamTargetPerMonthDTO";
+import {TeamTargetPerMonthDTOTransformer} from "./view/per-month/team/TeamTargetPerMonthDTOTransformer";
+import {PerQuarterDTO} from "./view/per-quarter/PerQuarterDTO";
+import {PerQuarterDTOTransformer} from "./view/per-quarter/PerQuarterDTOTransformer";
+import {TeamPerQuarterDTOTransformer} from "./view/per-quarter/team/TeamPerQuarterDTOTransformer";
+import {TeamQuarterlyTargetDTO} from "./view/per-quarter/team/TeamQuarterlyTargetDTO";
 
-@Service()
+@autoInjectable()
 export class TargetController {
 
   constructor(private targetService: TargetService) {
   }
 
-  async getTargetsPerMonthForYear(month: number, year: number): Promise<MonthlyTargetDTO | Record<never, never>> {
+  async getTargetsPerMonthForYear(month: number, year: number): Promise<PerMonthDTO | Record<never, never>> {
+    if (month < 1 || month > 12) throw new ApplicationError(HttpError.BAD_REQUEST, 'Month must be valid')
     const targetEntity = await this.targetService.getTargetForMonth(month, year)
     if (!targetEntity) throw new ApplicationError()
     return new PerMonthDTOTransformer().toDTO(targetEntity)
   }
 
-  async getTargetsPerQuarter(quarter: number, year: number): Promise<QuarterlyTargetDTO | Record<never, never>> {
+  async getTargetsPerQuarter(quarter: number, year: number): Promise<PerQuarterDTO | Record<never, never>> {
+    if (quarter < 1 || quarter > 4) throw new ApplicationError(HttpError.BAD_REQUEST, 'Quarter must be valid')
     const targetEntity = await this.targetService.getTargetFromQuarter(quarter, year)
     if (!targetEntity) throw new ApplicationError()
     return new PerQuarterDTOTransformer().toDTO(targetEntity)
   }
 
-  async getTeamTargetsPerMonthForYear(month: number, year: number): Promise<SalesTeamMonthlyTargetDTO | Record<never, never>> {
+  async getTeamTargetsPerMonthForYear(month: number, year: number): Promise<TeamTargetPerMonthDTO | Record<never, never>> {
+    if (month < 1 || month > 12) throw new ApplicationError(HttpError.BAD_REQUEST, 'Month must be valid')
     const targetEntity = await this.targetService.getTeamTargetsForMonth(month, year)
     if (!targetEntity) throw new ApplicationError()
-    return new SalesTeamPerMonthDTOTransformer().toDTO(targetEntity)
+    return new TeamTargetPerMonthDTOTransformer().toDTO(targetEntity)
   }
 
-  async getTeamTargetsPerQuarter(quarter: number, year: number): Promise<SalesTeamQuarterlyTargetDTO | Record<never, never>> {
+  async getTeamTargetsPerQuarter(quarter: number, year: number): Promise<TeamQuarterlyTargetDTO | Record<never, never>> {
+    if (quarter < 1 || quarter > 4) throw new ApplicationError(HttpError.BAD_REQUEST, 'Quarter must be valid')
     const targetEntity = await this.targetService.getTeamTargetsFromQuarter(quarter, year)
     if (!targetEntity) throw new ApplicationError()
 
-    return new SalesTeamPerQuarterDTOTransformer().toDTO(targetEntity)
+    return new TeamPerQuarterDTOTransformer().toDTO(targetEntity)
   }
 
 }

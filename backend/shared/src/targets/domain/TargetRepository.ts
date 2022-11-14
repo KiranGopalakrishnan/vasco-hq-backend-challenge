@@ -1,12 +1,23 @@
-import {Service} from "typedi";
+import {autoInjectable} from "tsyringe";
 import {JSONDataSource} from "../../db/JSONDataSource";
 import {MonthlyTargetEntity} from "./entities/MonthlyTargetEntity";
 
-@Service()
-export class TargetRepository {
-  private dataSource: JSONDataSource;
+type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
 
-  public constructor(dataSource: JSONDataSource) {
+export interface Target {
+  month: Month,
+  year: number,
+  recurringRevenue: number,
+  churnRate: number,
+  downgradeRate: number,
+  upgradeRate: number
+}
+
+@autoInjectable()
+export class TargetRepository {
+  private dataSource: JSONDataSource<Target>;
+
+  public constructor(dataSource: JSONDataSource<Target>) {
     this.dataSource = dataSource
   }
 

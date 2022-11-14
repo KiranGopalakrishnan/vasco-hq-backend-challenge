@@ -1,13 +1,13 @@
-import {Entity} from "../../common/Entity";
-import {MonthlyTargetEntity} from "../entities/MonthlyTargetEntity";
-import {ExpansionTargetFormula} from "../formulaes/team/ExpansionTargetForumula";
-import {TeamMonthlyTargetCalculator} from "./TeamMonthlyTargetCalculator";
+import {Entity} from "../../../common/Entity";
+import {ExpansionTargetFormula} from "../../formulas/team/ExpansionTargetForumula";
+import {MonthlyTargetEntity, MonthlyTargetEntityExposedFields} from "../MonthlyTargetEntity";
+import {SalesTeamMonthlyTargetEntity} from "./SalesTeamMonthlyTargetEntity";
 
-interface ExposedFields {
+interface ExposedFields extends MonthlyTargetEntityExposedFields {
 }
 
 
-export class ExpansionTeamMonthlyTarget implements Entity<ExposedFields>, TeamMonthlyTargetCalculator {
+export class ExpansionTeamMonthlyTargetEntity implements Entity<ExposedFields>, SalesTeamMonthlyTargetEntity {
   private monthlyTarget: MonthlyTargetEntity
   private previousMonthlyTarget: MonthlyTargetEntity
 

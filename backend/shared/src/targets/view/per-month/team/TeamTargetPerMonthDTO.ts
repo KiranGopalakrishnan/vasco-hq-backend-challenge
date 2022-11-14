@@ -1,5 +1,4 @@
-import {BaseTargetDTO, TargetDTOArgs} from "../../common/BaseTargetDTO";
-
+import {BaseTargetDTO, TargetDTOArgs} from "../../../common/BaseTargetDTO";
 
 interface PerMonthTargetArgs extends TargetDTOArgs {
   month: number;
@@ -8,7 +7,7 @@ interface PerMonthTargetArgs extends TargetDTOArgs {
 }
 
 
-export class SalesTeamMonthlyTargetDTO extends BaseTargetDTO {
+export class TeamTargetPerMonthDTO extends BaseTargetDTO {
   readonly month!: number;
   readonly acquisitionTarget!: number;
   readonly expansionTarget!: number;

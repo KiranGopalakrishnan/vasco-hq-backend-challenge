@@ -1,5 +1,5 @@
 import {Entity} from "../../common/Entity";
-import {NetRetentionRateFormula} from "../formulaes/team/NetRetentionRateFormula";
+import {NetRetentionRateFormula} from "../formulas/team/NetRetentionRateFormula";
 
 enum Month {
   January = 1,
@@ -79,7 +79,6 @@ export class MonthlyTargetEntity implements Entity<MonthlyTargetEntityExposedFie
   divideByHundred(value: number) {
     return parseFloat((value / 100).toFixed(3))
   }
-
 
   getFields(): MonthlyTargetEntityExposedFields {
     return {

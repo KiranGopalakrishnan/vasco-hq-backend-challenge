@@ -1,37 +1,54 @@
-import {Service} from "typedi";
+import {autoInjectable} from "tsyringe";
+import {ApplicationError, HttpError} from "../../utils/HttpError";
 import {MonthlyTargetEntity} from "./entities/MonthlyTargetEntity";
-import {QuarterlyTargetEntity} from "./entities/QuarterlyTargetEntity";
-import {SalesTeamMonthlyTargetEntity} from "./entities/SalesTeamMonthlyTargetEntity";
-import {SalesTeamQuarterlyTargetEntity} from "./entities/SalesTeamQuarterlyTargetEntity";
+import {QuarterlyTargetAggregate} from "./entities/QuarterlyTargetAggregate";
+import {TeamMonthlyTargetAggregate} from "./entities/team-entities/TeamMonthlyTargetAggregate";
+import {TeamQuarterlyTargetAggregate} from "./entities/team-entities/TeamQuarterlyTargetAggregate";
 import {TargetRepository} from "./TargetRepository";
 
 
-@Service()
+@autoInjectable()
 export class TargetService {
 
   constructor(private targetRepository: TargetRepository) {
   }
 
   async getTargetForMonth(month: number, year: number): Promise<MonthlyTargetEntity | null> {
-    const allTargets = await this.targetRepository.getAllTargets()
-    const targetForYear = allTargets.find(target => target.isForMonth(month) && target.isForYear(year))
-    if (!targetForYear) return null
-    return targetForYear
+    try {
+      const allTargets = await this.targetRepository.getAllTargets()
+      const targetForYear = allTargets.find(target => target.isForMonth(month) && target.isForYear(year))
+      if (!targetForYear) return null
+      return targetForYear
+    } catch (e) {
+      throw new ApplicationError(HttpError.INTERNAL_SERVER_ERROR)
+    }
   }
 
-  async getTargetFromQuarter(quarter: number, year: number): Promise<QuarterlyTargetEntity | null> {
-    const allTargets = await this.targetRepository.getAllTargets()
-    return new QuarterlyTargetEntity(allTargets, quarter, year)
+  async getTargetFromQuarter(quarter: number, year: number): Promise<QuarterlyTargetAggregate | null> {
+    try {
+      const allTargets = await this.targetRepository.getAllTargets()
+      return new QuarterlyTargetAggregate(allTargets, quarter, year)
+    } catch (e) {
+      throw new ApplicationError(HttpError.INTERNAL_SERVER_ERROR)
+    }
   }
 
-  async getTeamTargetsForMonth(month: number, year: number): Promise<SalesTeamMonthlyTargetEntity | null> {
-    const allTargets = await this.targetRepository.getAllTargets()
-    return new SalesTeamMonthlyTargetEntity(allTargets, month, year)
+  async getTeamTargetsForMonth(month: number, year: number): Promise<TeamMonthlyTargetAggregate | null> {
+    try {
+      const allTargets = await this.targetRepository.getAllTargets()
+      return new TeamMonthlyTargetAggregate(allTargets, month, year)
+    } catch (e) {
+      throw new ApplicationError(HttpError.INTERNAL_SERVER_ERROR)
+    }
   }
 
-  async getTeamTargetsFromQuarter(quarter: number, year: number): Promise<SalesTeamQuarterlyTargetEntity | null> {
-    const allTargets = await this.targetRepository.getAllTargets()
-    return new SalesTeamQuarterlyTargetEntity(allTargets, quarter, year)
+  async getTeamTargetsFromQuarter(quarter: number, year: number): Promise<TeamQuarterlyTargetAggregate | null> {
+    try {
+      const allTargets = await this.targetRepository.getAllTargets()
+      return new TeamQuarterlyTargetAggregate(allTargets, quarter, year)
+    } catch (e) {
+      throw new ApplicationError(HttpError.INTERNAL_SERVER_ERROR)
+    }
   }
 
 }

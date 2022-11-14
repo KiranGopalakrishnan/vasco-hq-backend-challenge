@@ -1,13 +1,10 @@
 import {Entity} from "../../common/Entity";
 import {Quarter} from "../../common/Quarter";
-import {AverageRecurringRevenueCalculator} from "../formulaes/AverageRecurringRevenueCalculator";
-import {QuarterlyAmountCalculator, RateType} from "../formulaes/QuarterlyAmountCalculator";
-import {QuarterlyRateCalculator} from "../formulaes/QuarterlyRateCalculator";
+import {TargetList} from "../data-structures/TargetList";
+import {AverageRecurringRevenueFormula} from "../formulas/AverageRecurringRevenueFormula";
+import {QuarterlyAmountFormula, RateType} from "../formulas/QuarterlyAmountFormula";
+import {QuarterlyRateFormula} from "../formulas/QuarterlyRateFormula";
 import {MonthlyTargetEntity} from "./MonthlyTargetEntity";
-
-
-const PREVIOUS_YEAR = 2021
-const PREVIOUS_YEAR_RECURRING_REVENUE = 100000
 
 export interface QuarterlyEntityExposedFields {
   quarter: number
@@ -18,21 +15,19 @@ export interface QuarterlyEntityExposedFields {
   upgradeRate: number
 }
 
-/* QuarterlyTargetEntity here is an aggregate root , and acts over multiple monthly targets within a quarter */
-
-export class QuarterlyTargetEntity implements Entity<QuarterlyEntityExposedFields> {
-  private targets: MonthlyTargetEntity[] = []
+export class QuarterlyTargetAggregate implements Entity<QuarterlyEntityExposedFields> {
+  private targets: TargetList = new TargetList()
   private readonly quarter!: Quarter
   private readonly year!: number
   private lastMonthRevenueForQuarter: number = 0
   private readonly targetsForQuarter: MonthlyTargetEntity[] = []
 
   constructor(targets: MonthlyTargetEntity[] = [], currentQuarter: number, year: number) {
-    this.targets = targets;
+    this.targets = new TargetList(targets);
     this.quarter = new Quarter(currentQuarter, year);
     this.year = year;
 
-    this.targetsForQuarter = this.findAllTargetsForQuarter()
+    this.targetsForQuarter = this.targets.findTargetsForQuarter(currentQuarter, year)
     this.calculateLastMonthRevenueInQuarter()
   }
 
@@ -63,42 +58,23 @@ export class QuarterlyTargetEntity implements Entity<QuarterlyEntityExposedField
   private getRateForType(rateType: RateType) {
     const previousAdjacentMonthTarget = this.getAdjacentPreviousMonthTarget()
     if (!previousAdjacentMonthTarget) throw new Error('No previous month found for target')
-    const quarterlyAmountCalculator = new QuarterlyAmountCalculator(
+    const quarterlyAmountCalculator = new QuarterlyAmountFormula(
       this.targetsForQuarter,
       previousAdjacentMonthTarget,
       rateType
     )
-    const avgRecRevenueCalculator = new AverageRecurringRevenueCalculator(this.targetsForQuarter)
-    return new QuarterlyRateCalculator(quarterlyAmountCalculator, avgRecRevenueCalculator).calculate()
+    const avgRecRevenueCalculator = new AverageRecurringRevenueFormula(this.targetsForQuarter)
+    return new QuarterlyRateFormula(quarterlyAmountCalculator, avgRecRevenueCalculator).calculate()
   }
 
   private calculateLastMonthRevenueInQuarter() {
     const lastMonthInQuarter = this.quarter.getLastMonth()
-    const targetForLastMonth = this.findTargetForMonth(lastMonthInQuarter, this.year)
+    const targetForLastMonth = this.targets.findTargetForMonth(lastMonthInQuarter, this.year)
     this.lastMonthRevenueForQuarter = targetForLastMonth?.getFields().recurringRevenue || 0
   }
 
   private getAdjacentPreviousMonthTarget() {
     const {month, year} = this.quarter.getAdjacentPreviousMonthAndYear()
-    if (year === PREVIOUS_YEAR) {
-      return new MonthlyTargetEntity({
-        month,
-        year,
-        recurringRevenue: PREVIOUS_YEAR_RECURRING_REVENUE,
-        churnRate: 0,
-        downgradeRate: 0,
-        upgradeRate: 0
-      })
-    }
-
-    return this.findTargetForMonth(month, year)
-  }
-
-  private findAllTargetsForQuarter() {
-    return this.targets.filter(target => target.isForQuarter(this.quarter.getQuarter()) && target.isForYear(this.year))
-  }
-
-  private findTargetForMonth(month: number, year: number) {
-    return this.targets.find(target => target.isForMonth(month) && target.isForYear(year))
+    return this.targets.findTargetForMonth(month, year)
   }
 }

@@ -1,4 +1,4 @@
-import {BaseTargetDTO, TargetDTOArgs} from "../../common/BaseTargetDTO";
+import {BaseTargetDTO, TargetDTOArgs} from "../../../common/BaseTargetDTO";
 
 interface Args extends TargetDTOArgs {
   quarter: number;
@@ -7,7 +7,7 @@ interface Args extends TargetDTOArgs {
 }
 
 
-export class SalesTeamQuarterlyTargetDTO extends BaseTargetDTO {
+export class TeamQuarterlyTargetDTO extends BaseTargetDTO {
   readonly quarter!: number;
   readonly acquisitionTarget!: number;
   readonly expansionTarget!: number;

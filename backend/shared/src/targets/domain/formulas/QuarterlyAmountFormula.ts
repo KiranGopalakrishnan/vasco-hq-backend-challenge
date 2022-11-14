@@ -7,13 +7,13 @@ export enum RateType {
   DOWNGRADE_RATE = 'DOWNGRADE_RATE'
 }
 
-export class QuarterlyAmountCalculator implements Formula {
+export class QuarterlyAmountFormula implements Formula {
   currentQuarterTargets: MonthlyTargetEntity[] = []
   adjacentPrevMonthTarget: MonthlyTargetEntity
   rateType: RateType
 
   constructor(currentQuarterTargets: MonthlyTargetEntity[], adjacentPrevMonthTarget: MonthlyTargetEntity, rateType: RateType) {
-    this.currentQuarterTargets = QuarterlyAmountCalculator.sortTargetsByMonthAndYear(currentQuarterTargets)
+    this.currentQuarterTargets = QuarterlyAmountFormula.sortTargetsByMonthAndYear(currentQuarterTargets)
     this.adjacentPrevMonthTarget = adjacentPrevMonthTarget
     this.rateType = rateType
   }

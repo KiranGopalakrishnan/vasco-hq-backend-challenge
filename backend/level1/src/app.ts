@@ -1,7 +1,7 @@
 import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import {TargetController} from "shared";
-import {Container} from "typedi";
+import {container} from "tsyringe";
 import {z} from "zod";
 
 // Context
@@ -19,11 +19,11 @@ function createRouter() {
 // Procedures
 // ==========
 
+const targetController = container.resolve(TargetController)
 const targetsRouter = createRouter().query("perMonth", {
   input: z.object({month: z.number().gte(1).lte(12), year: z.number()}),
   resolve: async (req) => {
     const {month, year} = req.input
-    const targetController = Container.get(TargetController)
     return await targetController.getTargetsPerMonthForYear(Number(month), Number(year))
   },
 });

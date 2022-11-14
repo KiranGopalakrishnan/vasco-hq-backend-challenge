@@ -1,7 +1,7 @@
 import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import {TargetController} from "shared";
-import {Container} from "typedi";
+import {container} from "tsyringe";
 import {z} from "zod";
 
 // Context
@@ -20,7 +20,7 @@ function createRouter() {
 // ==========
 
 
-const targetController = Container.get(TargetController)
+const targetController = container.resolve(TargetController)
 
 const targetsRouter = createRouter()
   .query("perMonth", {
