@@ -13,7 +13,7 @@ export class TeamMonthlyTargetAggregate implements Entity<ExposedFields> {
   private readonly monthlyTargetList: TargetList = new TargetList()
   private readonly month: number
   private readonly year: number
-  private currentMonthTarget!: MonthlyTargetEntity
+  private currentMonthTarget!: MonthlyTargetEntity | null
 
   constructor(monthlyTargets: MonthlyTargetEntity[], month: number, year: number) {
     this.monthlyTargetList = new TargetList(monthlyTargets)
@@ -22,17 +22,24 @@ export class TeamMonthlyTargetAggregate implements Entity<ExposedFields> {
     this.setCurrentMonthTarget()
   }
 
+  isValid(): boolean {
+    return !!this.currentMonthTarget
+  }
+
   getAcquisitionTeamTarget() {
     const previousMonthTarget = this.monthlyTargetList.getPreviousMonth(this.month, this.year)
+    if (!this.currentMonthTarget) throw new Error('Monthly target is required to calculate Acq team target')
     return new AcquisitionTeamMonthlyTargetEntity(this.currentMonthTarget, previousMonthTarget).getTarget()
   }
 
   getExpansionTeamTarget() {
     const previousMonthTarget = this.monthlyTargetList.getPreviousMonth(this.month, this.year)
+    if (!this.currentMonthTarget) throw new Error('Monthly target is required to calculate Exp team target')
     return new ExpansionTeamMonthlyTargetEntity(this.currentMonthTarget, previousMonthTarget).getTarget()
   }
 
   getFields(): ExposedFields {
+    if (!this.currentMonthTarget) throw new Error('Monthly target could not be found')
     return {
       ...this.currentMonthTarget.getFields(),
       acquisitionTarget: this.getAcquisitionTeamTarget(),
@@ -41,8 +48,6 @@ export class TeamMonthlyTargetAggregate implements Entity<ExposedFields> {
   }
 
   private setCurrentMonthTarget() {
-    const target = this.monthlyTargetList.findTargetForMonth(this.month, this.year)
-    if (!target) throw Error('Monthly target not found')
-    this.currentMonthTarget = target
+    this.currentMonthTarget = this.monthlyTargetList.findTargetForMonth(this.month, this.year)
   }
 }

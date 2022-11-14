@@ -8,13 +8,13 @@
 - Go into `/backend` folder
     - run
 
-  yarn install
+    yarn install
 
 This will bootstrap the dependencies in the workspace including package -> package deps
 
 - then run
 
-    yarn run test
+  yarn run test
 
 for testing
 

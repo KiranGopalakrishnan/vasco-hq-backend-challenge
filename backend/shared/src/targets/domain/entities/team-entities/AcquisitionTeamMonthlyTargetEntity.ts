@@ -28,4 +28,8 @@ export class AcquisitionTeamMonthlyTargetEntity implements Entity<ExposedFields>
       this.previousMonthlyTarget.getFields().recurringRevenue
     ).calculate()
   }
+
+  isValid(): boolean {
+    return this.monthlyTarget.isValid() && this.previousMonthlyTarget.isValid();
+  }
 }

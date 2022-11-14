@@ -23,6 +23,10 @@ export class TeamQuarterlyTargetAggregate implements Entity<ExposedFields> {
     this.quarterlyTargetEntity = new QuarterlyTargetAggregate(targets, quarter, year)
   }
 
+  isValid(): boolean {
+    return !!this.quarterlyTargetEntity.isValid()
+  }
+
   getExpansionTeamTarget() {
     const targetsForQuarter = this.targets.findTargetsForQuarter(this.quarter.getQuarter(), this.year)
     const teamMonthlyTargets = targetsForQuarter.map(this.fromTargetToTeamMonthlyTargetAggregate(this.targets))

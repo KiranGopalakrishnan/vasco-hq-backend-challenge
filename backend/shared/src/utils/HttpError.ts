@@ -16,6 +16,10 @@ export class ApplicationError extends Error {
     this._code = code
     this._message = message
 
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ApplicationError)
+    }
+    console.error(code, message, this.stack)
     //Throw corresponding tRPC error
     //Throwing from the constructor is probably a bad idea , but trying to provide the same experience as the native Error class :(
     throw new trpc.TRPCError({
@@ -24,8 +28,8 @@ export class ApplicationError extends Error {
     });
   }
 
-  fromError(e: Error) {
-    return new ApplicationError(HttpError.INTERNAL_SERVER_ERROR, e.message)
+  fromError(e: unknown) {
+    return new ApplicationError(HttpError.INTERNAL_SERVER_ERROR, (e as Error).message)
   }
 
 }

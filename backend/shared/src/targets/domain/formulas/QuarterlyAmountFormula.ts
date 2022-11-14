@@ -1,4 +1,5 @@
 import {Formula} from "../../common/Formula";
+import {TargetList} from "../data-structures/TargetList";
 import {MonthlyTargetEntity} from "../entities/MonthlyTargetEntity";
 
 export enum RateType {
@@ -7,30 +8,23 @@ export enum RateType {
   DOWNGRADE_RATE = 'DOWNGRADE_RATE'
 }
 
+//TODO: Refactor this to compose the calculation better
 export class QuarterlyAmountFormula implements Formula {
-  currentQuarterTargets: MonthlyTargetEntity[] = []
+  currentQuarterTargets: TargetList = new TargetList()
   adjacentPrevMonthTarget: MonthlyTargetEntity
   rateType: RateType
 
-  constructor(currentQuarterTargets: MonthlyTargetEntity[], adjacentPrevMonthTarget: MonthlyTargetEntity, rateType: RateType) {
-    this.currentQuarterTargets = QuarterlyAmountFormula.sortTargetsByMonthAndYear(currentQuarterTargets)
+  constructor(currentQuarterTargets: TargetList, adjacentPrevMonthTarget: MonthlyTargetEntity, rateType: RateType) {
+    this.currentQuarterTargets = currentQuarterTargets
     this.adjacentPrevMonthTarget = adjacentPrevMonthTarget
     this.rateType = rateType
   }
 
-  //I think this function doesn't belong here
-  private static sortTargetsByMonthAndYear(targets: MonthlyTargetEntity[]): MonthlyTargetEntity[] {
-    return [...targets].sort((a, b) => {
-      return (
-        a.getFields().year - b.getFields().year ||
-        a.getFields().month - b.getFields().month
-      )
-    })
-  }
-
   calculate(): number {
-    return this.currentQuarterTargets.reduce((prev, current, index) => {
-      const previousMonthRecurringRevenue = this.getPreviousMonthTarget(index)?.getFields().recurringRevenue || 0
+    return this.currentQuarterTargets.getAsArray().reduce((prev, current, index) => {
+      const {month, year} = current.getFields()
+      const prevMonthTarget = this.getPreviousMonthTarget(index).getFields()
+      const previousMonthRecurringRevenue = prevMonthTarget?.recurringRevenue || 0
       const currentMonthRate = this.getRateTypeFromTarget(current)
       return prev + (previousMonthRecurringRevenue * currentMonthRate)
     }, 0)
@@ -39,7 +33,7 @@ export class QuarterlyAmountFormula implements Formula {
   private getPreviousMonthTarget(index: number): MonthlyTargetEntity {
     //Note: Need a better way to do this
     if (index === 0) return this.adjacentPrevMonthTarget
-    return this.currentQuarterTargets[index - 1]
+    return this.currentQuarterTargets.getTargetAtIndex(index - 1)
   }
 
   private getRateTypeFromTarget(target: MonthlyTargetEntity): number {

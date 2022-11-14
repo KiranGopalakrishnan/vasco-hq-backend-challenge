@@ -28,4 +28,8 @@ export class ExpansionTeamMonthlyTargetEntity implements Entity<ExposedFields>, 
       this.monthlyTarget.getNetRetentionRevenue(),
     ).calculate()
   }
+
+  isValid(): boolean {
+    return this.monthlyTarget.isValid() && this.previousMonthlyTarget.isValid();
+  }
 }

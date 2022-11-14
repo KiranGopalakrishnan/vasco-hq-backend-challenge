@@ -91,4 +91,8 @@ export class MonthlyTargetEntity implements Entity<MonthlyTargetEntityExposedFie
     }
   }
 
+  isValid(): boolean {
+    return true;
+  }
+
 }

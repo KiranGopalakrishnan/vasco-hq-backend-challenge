@@ -54,12 +54,18 @@ export class QuarterlyTargetAggregate implements Entity<QuarterlyEntityExposedFi
     return this.getRateForType(RateType.DOWNGRADE_RATE)
   }
 
+  isValid() {
+    return !!this.targetsForQuarter.length
+  }
+
 
   private getRateForType(rateType: RateType) {
     const previousAdjacentMonthTarget = this.getAdjacentPreviousMonthTarget()
+    //TODO: Throw useful error
+    // Maybe useful to create DomainError or BusinessError class for these type of errors ?
     if (!previousAdjacentMonthTarget) throw new Error('No previous month found for target')
     const quarterlyAmountCalculator = new QuarterlyAmountFormula(
-      this.targetsForQuarter,
+      new TargetList(this.targetsForQuarter),
       previousAdjacentMonthTarget,
       rateType
     )
