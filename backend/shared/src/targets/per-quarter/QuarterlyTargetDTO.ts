@@ -12,8 +12,8 @@ export class QuarterlyTargetDTO extends BaseTargetDTO {
   constructor(args: PerMonthTargetArgs) {
     super(args)
     this.quarter = args.quarter;
-    this.upgradeRate = this.toFloat(args.upgradeRate)
-    this.downgradeRate = this.toFloat(args.downgradeRate)
-    this.churnRate = this.toFloat(args.churnRate)
+    this.upgradeRate = this.toRate(args.upgradeRate)
+    this.downgradeRate = this.toRate(args.downgradeRate)
+    this.churnRate = this.toRate(args.churnRate)
   }
 }

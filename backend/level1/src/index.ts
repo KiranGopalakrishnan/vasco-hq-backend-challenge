@@ -2,7 +2,7 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import express from "express";
 import "reflect-metadata";
 
-import { appRouter, createContext } from "./app";
+import {appRouter, createContext} from "./app";
 
 export async function main() {
   const app = express();
@@ -18,6 +18,9 @@ export async function main() {
     trpcExpress.createExpressMiddleware({
       router: appRouter,
       createContext,
+      onError: (e) => {
+        console.error({e})
+      }
     })
   );
 

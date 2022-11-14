@@ -17,12 +17,16 @@ export class BaseTargetDTO {
   constructor(args: TargetDTOArgs) {
     this.year = args.year;
     this.recurringRevenue = args.recurringRevenue;
-    this.downgradeRate = this.toFloat(args.downgradeRate);
-    this.upgradeRate = this.toFloat(args.upgradeRate);
-    this.churnRate = this.toFloat(args.churnRate);
+    this.downgradeRate = this.toRate(args.downgradeRate);
+    this.upgradeRate = this.toRate(args.upgradeRate);
+    this.churnRate = this.toRate(args.churnRate);
   }
 
-  protected toFloat(v: number): number {
-    return parseFloat((v / 100).toFixed(3))
+  protected toRate(value: number): number {
+    return this.toFixed(value)
+  }
+
+  protected toFixed(value: number, digits: number = 3) {
+    return parseFloat(value.toFixed(digits))
   }
 }

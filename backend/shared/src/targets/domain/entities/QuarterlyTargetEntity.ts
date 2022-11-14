@@ -9,7 +9,7 @@ import {MonthlyTargetEntity} from "./MonthlyTargetEntity";
 const PREVIOUS_YEAR = 2021
 const PREVIOUS_YEAR_RECURRING_REVENUE = 100000
 
-interface ExposedFields {
+export interface QuarterlyEntityExposedFields {
   quarter: number
   year: number
   recurringRevenue: number
@@ -20,7 +20,7 @@ interface ExposedFields {
 
 /* QuarterlyTargetEntity here is an aggregate root , and acts over multiple monthly targets within a quarter */
 
-export class QuarterlyTargetEntity implements Entity<ExposedFields> {
+export class QuarterlyTargetEntity implements Entity<QuarterlyEntityExposedFields> {
   private targets: MonthlyTargetEntity[] = []
   private readonly quarter!: Quarter
   private readonly year!: number

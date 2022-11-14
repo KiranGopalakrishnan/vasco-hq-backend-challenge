@@ -10,9 +10,9 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "setupFiles": ["./jest-setup-file.ts"]
+    "setupFiles": [
+      "./jest-setup-file.ts"
+    ]
   },
-  "dependencies": {
-    "class-validator": "^0.13.2"
-  }
+  "dependencies": {}
 }

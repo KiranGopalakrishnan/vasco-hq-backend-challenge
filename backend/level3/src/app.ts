@@ -26,14 +26,14 @@ const targetsRouter = createRouter()
     input: z.object({month: z.number().gte(1).lte(12), year: z.number()}),
     resolve: async (req) => {
       const {month, year} = req.input
-      return await targetController.getTargetsPerMonthForYear(Number(month), Number(year))
+      return await targetController.getTeamTargetsPerMonthForYear(Number(month), Number(year))
     },
   })
   .query("perQuarter", {
     input: z.object({quarter: z.number().gte(1).lte(4), year: z.number()}),
     resolve: async (req) => {
       const {quarter, year} = req.input
-      return await targetController.getTargetsPerQuarter(Number(quarter), Number(year))
+      return await targetController.getTeamTargetsPerQuarter(Number(quarter), Number(year))
     },
   });
 

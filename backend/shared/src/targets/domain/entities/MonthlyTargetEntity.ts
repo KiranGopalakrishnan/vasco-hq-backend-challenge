@@ -1,4 +1,5 @@
 import {Entity} from "../../common/Entity";
+import {NetRetentionRateFormula} from "../formulaes/team/NetRetentionRateFormula";
 
 enum Month {
   January = 1,
@@ -24,7 +25,7 @@ export interface Args {
   upgradeRate: number
 }
 
-interface ExposedFields {
+export interface MonthlyTargetEntityExposedFields {
   month: Month,
   year: number,
   recurringRevenue: number,
@@ -35,7 +36,7 @@ interface ExposedFields {
 
 const MONTHS_IN_A_QUARTER = 3
 
-export class MonthlyTargetEntity implements Entity<ExposedFields> {
+export class MonthlyTargetEntity implements Entity<MonthlyTargetEntityExposedFields> {
   private readonly month: Month;
   private readonly year: number;
   private readonly recurringRevenue: number;
@@ -43,15 +44,15 @@ export class MonthlyTargetEntity implements Entity<ExposedFields> {
   private readonly downgradeRate: number;
   private readonly upgradeRate: number;
 
-  private quarter: number;
+  private quarter!: number;
 
   constructor(args: Args) {
     this.recurringRevenue = args.recurringRevenue;
     this.year = args.year;
     this.month = args.month as Month;
-    this.churnRate = args.churnRate;
-    this.downgradeRate = args.downgradeRate;
-    this.upgradeRate = args.upgradeRate;
+    this.churnRate = this.divideByHundred(args.churnRate);
+    this.downgradeRate = this.divideByHundred(args.downgradeRate);
+    this.upgradeRate = this.divideByHundred(args.upgradeRate);
     this.assignQuarter(args.month)
   }
 
@@ -71,7 +72,16 @@ export class MonthlyTargetEntity implements Entity<ExposedFields> {
     this.quarter = Math.ceil(month / MONTHS_IN_A_QUARTER)
   }
 
-  getFields(): ExposedFields {
+  getNetRetentionRevenue() {
+    return new NetRetentionRateFormula(this.upgradeRate, this.downgradeRate, this.churnRate).calculate()
+  }
+
+  divideByHundred(value: number) {
+    return parseFloat((value / 100).toFixed(3))
+  }
+
+
+  getFields(): MonthlyTargetEntityExposedFields {
     return {
       year: this.year,
       month: this.month,
