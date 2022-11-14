@@ -1,6 +1,8 @@
 import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
-import { z } from "zod";
+import {TargetController} from "shared";
+import {container} from "tsyringe";
+import {z} from "zod";
 
 // Context
 // =======
@@ -17,17 +19,22 @@ function createRouter() {
 // Procedures
 // ==========
 
+
+const targetController = container.resolve(TargetController)
+
 const targetsRouter = createRouter()
   .query("perMonth", {
-    input: z.object({ month: z.number(), year: z.number() }),
-    resolve: () => {
-      return {}; // TODO
+    input: z.object({month: z.number().gte(1).lte(12), year: z.number()}),
+    resolve: async (req) => {
+      const {month, year} = req.input
+      return await targetController.getTargetsPerMonthForYear(Number(month), Number(year))
     },
   })
   .query("perQuarter", {
-    input: z.object({ quarter: z.number(), year: z.number() }),
-    resolve: () => {
-      return {}; // TODO
+    input: z.object({quarter: z.number().gte(1).lte(4), year: z.number()}),
+    resolve: async (req) => {
+      const {quarter, year} = req.input
+      return await targetController.getTargetsPerQuarter(Number(quarter), Number(year))
     },
   });
 

@@ -9,6 +9,10 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node"
-  }
+    "testEnvironment": "node",
+    "setupFiles": [
+      "./jest-setup-file.ts"
+    ]
+  },
+  "dependencies": {}
 }

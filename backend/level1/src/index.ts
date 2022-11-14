@@ -1,7 +1,8 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
 import express from "express";
+import "reflect-metadata";
 
-import { appRouter, createContext } from "./app";
+import {appRouter, createContext} from "./app";
 
 export async function main() {
   const app = express();
@@ -17,9 +18,13 @@ export async function main() {
     trpcExpress.createExpressMiddleware({
       router: appRouter,
       createContext,
+      onError: (e) => {
+        console.error({e})
+      }
     })
   );
-  app.get("/", (_req, res) => res.send("hello"));
+
+  app.get("/", async (_req, res) => res.send('hello'));
   app.listen(2021, () => {
     console.log("listening on port 2021");
   });
