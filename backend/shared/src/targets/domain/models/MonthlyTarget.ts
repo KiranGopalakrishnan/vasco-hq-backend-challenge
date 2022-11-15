@@ -36,7 +36,7 @@ export interface MonthlyTargetEntityExposedFields {
 
 const MONTHS_IN_A_QUARTER = 3
 
-export class MonthlyTargetEntity implements Entity<MonthlyTargetEntityExposedFields> {
+export class MonthlyTarget implements Entity<MonthlyTargetEntityExposedFields> {
   private readonly month: Month;
   private readonly year: number;
   private readonly recurringRevenue: number;
@@ -68,16 +68,8 @@ export class MonthlyTargetEntity implements Entity<MonthlyTargetEntityExposedFie
     return this.year === year
   }
 
-  assignQuarter(month: Month) {
-    this.quarter = Math.ceil(month / MONTHS_IN_A_QUARTER)
-  }
-
   getNetRetentionRevenue() {
     return new NetRetentionRateFormula(this.upgradeRate, this.downgradeRate, this.churnRate).calculate()
-  }
-
-  divideByHundred(value: number) {
-    return parseFloat((value / 100).toFixed(3))
   }
 
   getFields(): MonthlyTargetEntityExposedFields {
@@ -93,6 +85,14 @@ export class MonthlyTargetEntity implements Entity<MonthlyTargetEntityExposedFie
 
   isValid(): boolean {
     return true;
+  }
+
+  private divideByHundred(value: number) {
+    return parseFloat((value / 100).toFixed(3))
+  }
+
+  private assignQuarter(month: Month) {
+    this.quarter = Math.ceil(month / MONTHS_IN_A_QUARTER)
   }
 
 }

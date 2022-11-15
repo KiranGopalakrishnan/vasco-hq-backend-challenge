@@ -1,10 +1,10 @@
 import {Formula} from "../../common/Formula";
-import {MonthlyTargetEntity} from "../entities/MonthlyTargetEntity";
+import {MonthlyTarget} from "../models/MonthlyTarget";
 
 const MONTHS_IN_A_QUARTER = 3
 
 export class AverageRecurringRevenueFormula implements Formula {
-  constructor(private targets: MonthlyTargetEntity[]) {
+  constructor(private targets: MonthlyTarget[]) {
   }
 
   calculate(): number {

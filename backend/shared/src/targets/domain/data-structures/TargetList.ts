@@ -1,4 +1,4 @@
-import {MonthlyTargetEntity} from "../entities/MonthlyTargetEntity";
+import {MonthlyTarget} from "../models/MonthlyTarget";
 
 const PREVIOUS_YEAR_RECURRING_REVENUE = 100000
 const PREVIOUS_YEAR_LAST_MONTH = 12
@@ -12,13 +12,13 @@ const PREVIOUS_YEAR = 2021
 
 //TODO: Create a generic List interface to be implemented here and replace type references to the abstraction rather than concretion
 export class TargetList {
-  private readonly list: MonthlyTargetEntity[] = []
+  private readonly list: MonthlyTarget[] = []
 
-  constructor(list: MonthlyTargetEntity[] = []) {
+  constructor(list: MonthlyTarget[] = []) {
     this.list = this.sortByMonthAndYear(list)
   }
 
-  findTargetForMonth(month: number, year: number): MonthlyTargetEntity | null {
+  findTargetForMonth(month: number, year: number): MonthlyTarget | null {
     if (month === PREVIOUS_YEAR_LAST_MONTH && year === PREVIOUS_YEAR) {
       return this.getPreviousYearEndTarget()
     }
@@ -30,7 +30,7 @@ export class TargetList {
 
   // Unsure of this method doing a m - 1 on current month , it's not obvious
   // TODO: Refactor
-  getPreviousMonth(currentMonth: number, year: number): MonthlyTargetEntity {
+  getPreviousMonth(currentMonth: number, year: number): MonthlyTarget {
     const prevMonth = currentMonth - 1
     if (prevMonth < 1) {
       return this.getPreviousYearEndTarget()
@@ -44,7 +44,7 @@ export class TargetList {
   // This might be an important detail that's hidden in this class and is not obvious
   // TODO: Refactor
   getPreviousYearEndTarget() {
-    return new MonthlyTargetEntity({
+    return new MonthlyTarget({
       month: 12,
       year: 2021,
       recurringRevenue: PREVIOUS_YEAR_RECURRING_REVENUE,
@@ -54,11 +54,11 @@ export class TargetList {
     })
   }
 
-  findTargetsForQuarter(quarter: number, year: number): MonthlyTargetEntity[] {
+  findTargetsForQuarter(quarter: number, year: number): MonthlyTarget[] {
     return this.list.filter(target => target.isForQuarter(quarter) && target.isForYear(year))
   }
 
-  getAsArray(): MonthlyTargetEntity[] {
+  getAsArray(): MonthlyTarget[] {
     return this.list
   }
 
@@ -66,7 +66,7 @@ export class TargetList {
     return this.list[index]
   }
 
-  private sortByMonthAndYear(list: MonthlyTargetEntity[]): MonthlyTargetEntity[] {
+  private sortByMonthAndYear(list: MonthlyTarget[]): MonthlyTarget[] {
     return [...list].sort((a, b) => {
       return (
         a.getFields().year - b.getFields().year ||

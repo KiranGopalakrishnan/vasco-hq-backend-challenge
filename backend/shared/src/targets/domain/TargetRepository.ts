@@ -1,6 +1,6 @@
 import {autoInjectable} from "tsyringe";
 import {JSONDataSource} from "../../db/JSONDataSource";
-import {MonthlyTargetEntity} from "./entities/MonthlyTargetEntity";
+import {MonthlyTarget} from "./models/MonthlyTarget";
 
 type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
 
@@ -21,9 +21,9 @@ export class TargetRepository {
     this.dataSource = dataSource
   }
 
-  async getAllTargets(): Promise<MonthlyTargetEntity[]> {
+  async getAllTargets(): Promise<MonthlyTarget[]> {
+    //Probably a better idea to load this once as the JSON doesn't change , but a constructor cannot be async , so reading it when neccessory
     const data = await this.dataSource.read()
-    return data.map(item => new MonthlyTargetEntity(item))
+    return data.map(item => new MonthlyTarget(item))
   }
-
 }

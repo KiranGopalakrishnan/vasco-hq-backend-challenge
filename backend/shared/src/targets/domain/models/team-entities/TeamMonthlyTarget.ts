@@ -1,21 +1,21 @@
 import {Entity} from "../../../common/Entity";
 import {TargetList} from "../../data-structures/TargetList";
-import {MonthlyTargetEntity, MonthlyTargetEntityExposedFields} from "../MonthlyTargetEntity";
-import {AcquisitionTeamMonthlyTargetEntity} from "./AcquisitionTeamMonthlyTargetEntity";
-import {ExpansionTeamMonthlyTargetEntity} from "./ExpansionTeamMonthlyTargetEntity";
+import {MonthlyTarget, MonthlyTargetEntityExposedFields} from "../MonthlyTarget";
+import {AcquisitionTeamMonthlyTarget} from "./AcquisitionTeamMonthlyTarget";
+import {ExpansionTeamMonthlyTarget} from "./ExpansionTeamMonthlyTarget";
 
 interface ExposedFields extends MonthlyTargetEntityExposedFields {
   acquisitionTarget: number,
   expansionTarget: number
 }
 
-export class TeamMonthlyTargetAggregate implements Entity<ExposedFields> {
+export class TeamMonthlyTarget implements Entity<ExposedFields> {
   private readonly monthlyTargetList: TargetList = new TargetList()
   private readonly month: number
   private readonly year: number
-  private currentMonthTarget!: MonthlyTargetEntity | null
+  private currentMonthTarget!: MonthlyTarget | null
 
-  constructor(monthlyTargets: MonthlyTargetEntity[], month: number, year: number) {
+  constructor(monthlyTargets: MonthlyTarget[], month: number, year: number) {
     this.monthlyTargetList = new TargetList(monthlyTargets)
     this.month = month
     this.year = year
@@ -29,13 +29,13 @@ export class TeamMonthlyTargetAggregate implements Entity<ExposedFields> {
   getAcquisitionTeamTarget() {
     const previousMonthTarget = this.monthlyTargetList.getPreviousMonth(this.month, this.year)
     if (!this.currentMonthTarget) throw new Error('Monthly target is required to calculate Acq team target')
-    return new AcquisitionTeamMonthlyTargetEntity(this.currentMonthTarget, previousMonthTarget).getTarget()
+    return new AcquisitionTeamMonthlyTarget(this.currentMonthTarget, previousMonthTarget).getTarget()
   }
 
   getExpansionTeamTarget() {
     const previousMonthTarget = this.monthlyTargetList.getPreviousMonth(this.month, this.year)
     if (!this.currentMonthTarget) throw new Error('Monthly target is required to calculate Exp team target')
-    return new ExpansionTeamMonthlyTargetEntity(this.currentMonthTarget, previousMonthTarget).getTarget()
+    return new ExpansionTeamMonthlyTarget(this.currentMonthTarget, previousMonthTarget).getTarget()
   }
 
   getFields(): ExposedFields {

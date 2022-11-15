@@ -1,30 +1,30 @@
 import {Entity} from "../../../common/Entity";
 import {Quarter} from "../../../common/Quarter";
 import {TargetList} from "../../data-structures/TargetList";
-import {MonthlyTargetEntity} from "../MonthlyTargetEntity";
-import {QuarterlyEntityExposedFields, QuarterlyTargetAggregate} from "../QuarterlyTargetAggregate";
-import {TeamMonthlyTargetAggregate} from "./TeamMonthlyTargetAggregate";
+import {MonthlyTarget} from "../MonthlyTarget";
+import {QuarterlyEntityExposedFields, QuarterlyTarget} from "../QuarterlyTarget";
+import {TeamMonthlyTarget} from "./TeamMonthlyTarget";
 
 interface ExposedFields extends QuarterlyEntityExposedFields {
   acquisitionTarget: number,
   expansionTarget: number
 }
 
-export class TeamQuarterlyTargetAggregate implements Entity<ExposedFields> {
+export class TeamQuarterlyTarget implements Entity<ExposedFields> {
   private readonly quarter!: Quarter
   private readonly year!: number
   private readonly targets: TargetList = new TargetList()
-  private readonly quarterlyTargetEntity: QuarterlyTargetAggregate
+  private readonly quarterlyTargetEntity: QuarterlyTarget
 
-  constructor(targets: MonthlyTargetEntity[], quarter: number, year: number) {
+  constructor(targets: MonthlyTarget[], quarter: number, year: number) {
     this.targets = new TargetList(targets)
     this.quarter = new Quarter(quarter, year)
     this.year = year
-    this.quarterlyTargetEntity = new QuarterlyTargetAggregate(targets, quarter, year)
+    this.quarterlyTargetEntity = new QuarterlyTarget(targets, quarter, year)
   }
 
   isValid(): boolean {
-    return !!this.quarterlyTargetEntity.isValid()
+    return this.quarterlyTargetEntity.isValid()
   }
 
   getExpansionTeamTarget() {
@@ -54,9 +54,9 @@ export class TeamQuarterlyTargetAggregate implements Entity<ExposedFields> {
   }
 
   fromTargetToTeamMonthlyTargetAggregate(targetList: TargetList) {
-    return function (target: MonthlyTargetEntity) {
+    return function (target: MonthlyTarget) {
       const {month, year} = target.getFields()
-      return new TeamMonthlyTargetAggregate(targetList.getAsArray(), month, year)
+      return new TeamMonthlyTarget(targetList.getAsArray(), month, year)
     }
   }
 }

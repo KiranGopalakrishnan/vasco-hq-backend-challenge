@@ -4,7 +4,7 @@ import {TargetList} from "../data-structures/TargetList";
 import {AverageRecurringRevenueFormula} from "../formulas/AverageRecurringRevenueFormula";
 import {QuarterlyAmountFormula, RateType} from "../formulas/QuarterlyAmountFormula";
 import {QuarterlyRateFormula} from "../formulas/QuarterlyRateFormula";
-import {MonthlyTargetEntity} from "./MonthlyTargetEntity";
+import {MonthlyTarget} from "./MonthlyTarget";
 
 export interface QuarterlyEntityExposedFields {
   quarter: number
@@ -15,14 +15,14 @@ export interface QuarterlyEntityExposedFields {
   upgradeRate: number
 }
 
-export class QuarterlyTargetAggregate implements Entity<QuarterlyEntityExposedFields> {
+export class QuarterlyTarget implements Entity<QuarterlyEntityExposedFields> {
   private targets: TargetList = new TargetList()
   private readonly quarter!: Quarter
   private readonly year!: number
   private lastMonthRevenueForQuarter: number = 0
-  private readonly targetsForQuarter: MonthlyTargetEntity[] = []
+  private readonly targetsForQuarter: MonthlyTarget[] = []
 
-  constructor(targets: MonthlyTargetEntity[] = [], currentQuarter: number, year: number) {
+  constructor(targets: MonthlyTarget[] = [], currentQuarter: number, year: number) {
     this.targets = new TargetList(targets);
     this.quarter = new Quarter(currentQuarter, year);
     this.year = year;

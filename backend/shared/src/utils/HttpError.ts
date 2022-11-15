@@ -1,35 +1,34 @@
-import * as trpc from '@trpc/server';
+//Values should be matched to trpc error codes that are throwable , refer https://trpc.io/docs/v9/error-handling
+import {TRPCError} from "@trpc/server";
+import {DomainError, DomainErrorCode} from "./DomainError";
 
 //Values should be matched to trpc error codes that are throwable , refer https://trpc.io/docs/v9/error-handling
-export enum HttpError {
+//TODO: Refactor , this might be a hidden detail , find a way to make this mapping of trpc to http error code explicit
+export enum HttpErrorCode {
   BAD_REQUEST = 'BAD_REQUEST',
   NOT_FOUND = 'NOT_FOUND',
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR'
 }
 
-export class ApplicationError extends Error {
-  readonly _code: HttpError = HttpError.INTERNAL_SERVER_ERROR
-  readonly _message: string = 'Something went wrong'
-
-  constructor(code: HttpError = HttpError.INTERNAL_SERVER_ERROR, message: string = 'Something went wrong') {
+export class HttpError extends Error {
+  constructor(code: HttpErrorCode = HttpErrorCode.INTERNAL_SERVER_ERROR, message: string = 'Something went wrong') {
     super(message);
-    this._code = code
-    this._message = message
 
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ApplicationError)
-    }
     console.error(code, message, this.stack)
-    //Throw corresponding tRPC error
-    //Throwing from the constructor is probably a bad idea , but trying to provide the same experience as the native Error class :(
-    throw new trpc.TRPCError({
-      code: this._code,
-      message: this._message,
-    });
+    //I think this is a bad idea, maybe this should be in a global error handler , keeping this as is for now ,but might be a good candidate for a future refactor
+    throw new TRPCError({message, code})
   }
 
-  fromError(e: unknown) {
-    return new ApplicationError(HttpError.INTERNAL_SERVER_ERROR, (e as Error).message)
+  static fromDomainError(e: DomainError): HttpError {
+    return new HttpError(HttpError.mapDomainErrorCodeToTRPCErrorCode(e.code), e.message)
   }
 
+  private static mapDomainErrorCodeToTRPCErrorCode(code: DomainErrorCode): HttpErrorCode {
+    const errorCodeMap = {
+      [DomainErrorCode.BUSINESS_RULE_VIOLATION]: HttpErrorCode.BAD_REQUEST,
+      [DomainErrorCode.NOT_FOUND]: HttpErrorCode.NOT_FOUND,
+      [DomainErrorCode.INTERNAL_SERVER_ERROR]: HttpErrorCode.INTERNAL_SERVER_ERROR
+    }
+    return errorCodeMap[code] || HttpErrorCode.INTERNAL_SERVER_ERROR
+  }
 }

@@ -1,6 +1,6 @@
 import {Formula} from "../../common/Formula";
 import {TargetList} from "../data-structures/TargetList";
-import {MonthlyTargetEntity} from "../entities/MonthlyTargetEntity";
+import {MonthlyTarget} from "../models/MonthlyTarget";
 
 export enum RateType {
   CHURN_RATE = 'CHURN_RATE',
@@ -11,10 +11,10 @@ export enum RateType {
 //TODO: Refactor this to compose the calculation better
 export class QuarterlyAmountFormula implements Formula {
   currentQuarterTargets: TargetList = new TargetList()
-  adjacentPrevMonthTarget: MonthlyTargetEntity
+  adjacentPrevMonthTarget: MonthlyTarget
   rateType: RateType
 
-  constructor(currentQuarterTargets: TargetList, adjacentPrevMonthTarget: MonthlyTargetEntity, rateType: RateType) {
+  constructor(currentQuarterTargets: TargetList, adjacentPrevMonthTarget: MonthlyTarget, rateType: RateType) {
     this.currentQuarterTargets = currentQuarterTargets
     this.adjacentPrevMonthTarget = adjacentPrevMonthTarget
     this.rateType = rateType
@@ -30,13 +30,13 @@ export class QuarterlyAmountFormula implements Formula {
     }, 0)
   }
 
-  private getPreviousMonthTarget(index: number): MonthlyTargetEntity {
+  private getPreviousMonthTarget(index: number): MonthlyTarget {
     //Note: Need a better way to do this
     if (index === 0) return this.adjacentPrevMonthTarget
     return this.currentQuarterTargets.getTargetAtIndex(index - 1)
   }
 
-  private getRateTypeFromTarget(target: MonthlyTargetEntity): number {
+  private getRateTypeFromTarget(target: MonthlyTarget): number {
     if (this.rateType === RateType.CHURN_RATE) return target.getFields().churnRate
     if (this.rateType === RateType.UPGRADE_RATE) return target.getFields().upgradeRate
     if (this.rateType === RateType.DOWNGRADE_RATE) return target.getFields().downgradeRate

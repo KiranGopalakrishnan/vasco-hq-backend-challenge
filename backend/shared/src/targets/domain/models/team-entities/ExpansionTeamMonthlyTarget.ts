@@ -1,17 +1,17 @@
 import {Entity} from "../../../common/Entity";
 import {ExpansionTargetFormula} from "../../formulas/team/ExpansionTargetForumula";
-import {MonthlyTargetEntity, MonthlyTargetEntityExposedFields} from "../MonthlyTargetEntity";
-import {SalesTeamMonthlyTargetEntity} from "./SalesTeamMonthlyTargetEntity";
+import {MonthlyTarget, MonthlyTargetEntityExposedFields} from "../MonthlyTarget";
+import {SalesTeamMonthlyTarget} from "./SalesTeamMonthlyTarget";
 
 interface ExposedFields extends MonthlyTargetEntityExposedFields {
 }
 
 
-export class ExpansionTeamMonthlyTargetEntity implements Entity<ExposedFields>, SalesTeamMonthlyTargetEntity {
-  private monthlyTarget: MonthlyTargetEntity
-  private previousMonthlyTarget: MonthlyTargetEntity
+export class ExpansionTeamMonthlyTarget implements Entity<ExposedFields>, SalesTeamMonthlyTarget {
+  private monthlyTarget: MonthlyTarget
+  private previousMonthlyTarget: MonthlyTarget
 
-  constructor(target: MonthlyTargetEntity, previousMonthTarget: MonthlyTargetEntity) {
+  constructor(target: MonthlyTarget, previousMonthTarget: MonthlyTarget) {
     this.monthlyTarget = target
     this.previousMonthlyTarget = previousMonthTarget
   }
