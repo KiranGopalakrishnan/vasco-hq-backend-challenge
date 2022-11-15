@@ -8,6 +8,9 @@
     "build": "tsc",
     "test": "jest"
   },
+  "setupFiles": [
+    "./jest-setup-file.ts"
+  ],
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
